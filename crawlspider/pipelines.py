@@ -11,6 +11,3 @@ class SpiderPipeline(object):
         if spider.name=='xinli001_spider':
             print(item)
             return item
-
-        elif spider.name=='xinli001_detail_spider':
-            return item
