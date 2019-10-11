@@ -1,4 +1,5 @@
 import datetime
+import time
 
 import scrapy
 
@@ -18,7 +19,8 @@ class Xinli001Spider(scrapy.Spider):  # 需要继承scrapy.Spider类
             item['cover']=each.xpath(".//img").attrib['src']
             item['source']=1
             item['link']="https:"+each.xpath(".//a[1]").attrib['href']
-            yield scrapy.Request(url=item['link'], callback=self.parse_detail, meta={'item': item})
+            yield item
+            # yield scrapy.Request(url=item['link'], callback=self.parse_detail, meta={'item': item})
 
     def parse_detail(self, response):
         item=response.meta['item']
@@ -29,9 +31,9 @@ class Xinli001Spider(scrapy.Spider):  # 需要继承scrapy.Spider类
         ctime = response.xpath("//div[@class='info']/span[1]/text()").extract_first()
         ctime=ctime[-10:]
         item['meta2']={}
-        item['meta2']['org_ctime'] = datetime.datetime.strptime(ctime, "%Y-%m-%d")
+        item['meta2']['org_ctime'] = int(time.mktime(datetime.datetime.strptime(ctime, "%Y-%m-%d").timetuple()))
         item['meta2']['org_like_cnt'] = int(response.xpath("//div[@class='info']/span[2]/text()").extract_first()[:-1])
         item['meta2']['org_cmt_cnt'] = int(response.xpath("//div[@class='info']/span[3]/text()").extract_first()[:-2])
         item['meta2']['org_read_cnt'] = int(response.xpath("//div[@class='info']/span[4]/text()").extract_first()[:-2])
-        yield item
+        return item
 
