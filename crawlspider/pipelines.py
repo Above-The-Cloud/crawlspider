@@ -22,7 +22,7 @@ class SpiderPipeline(object):
                 "author": item["author"],
                 "meta2": json.dumps(item["meta2"]),
             }
-            url="http://127.0.0.1:8000/service/articles/create"
+            url="http://imgtext.psyhack.top/service/articles/create"
             r=requests.post(url,params)
 
             print("--------------------------------------------------------------------------------------------------------------------------------------")
