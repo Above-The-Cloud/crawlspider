@@ -1,3 +1,4 @@
+import base64
 import datetime
 import time
 
@@ -19,15 +20,15 @@ class Xinli001Spider(scrapy.Spider):  # 需要继承scrapy.Spider类
             item['cover']=each.xpath(".//img").attrib['src']
             item['source']=1
             item['link']="https:"+each.xpath(".//a[1]").attrib['href']
-            yield item
-            # yield scrapy.Request(url=item['link'], callback=self.parse_detail, meta={'item': item})
+            yield scrapy.Request(url=item['link'], callback=self.parse_detail, meta={'item': item})
 
     def parse_detail(self, response):
         item=response.meta['item']
         target = response.xpath("//div[@class='yxl-editor-article ']")
-        item['text'] = response.xpath("//div[@class='yxl-editor-article ']").extract_first()
+        item['text'] = base64.b64encode(response.xpath("//div[@class='yxl-editor-article ']").extract_first().encode("utf-8"))
         item['org_id'] = item['link'].split("/")[-1]
-        item['author'] = target.xpath("./h6[last()-3]/text()").extract_first()
+        # item['author'] = target.xpath("./h6[last()-3]/text()").extract_first()
+        item['author'] = target.xpath("./h6[contains(text(),'作者')]")[0].xpath("string(.)").extract_first()
         ctime = response.xpath("//div[@class='info']/span[1]/text()").extract_first()
         ctime=ctime[-10:]
         item['meta2']={}
@@ -36,4 +37,3 @@ class Xinli001Spider(scrapy.Spider):  # 需要继承scrapy.Spider类
         item['meta2']['org_cmt_cnt'] = int(response.xpath("//div[@class='info']/span[3]/text()").extract_first()[:-2])
         item['meta2']['org_read_cnt'] = int(response.xpath("//div[@class='info']/span[4]/text()").extract_first()[:-2])
         return item
-
