@@ -14,6 +14,7 @@ class SpiderPipeline(object):
         if spider.name=='xinli001_spider':
             params={
                 "cover":item["cover"],
+                "title":item["title"],
                 "desc": item["desc"],
                 "text": item["text"],
                 "source": item["source"],
@@ -23,6 +24,7 @@ class SpiderPipeline(object):
                 "meta2": json.dumps(item["meta2"]),
             }
             url="http://imgtext.psyhack.top/service/articles/create"
+            # url = "http://127.0.0.1:8000/service/articles/create"
             r=requests.post(url,params)
 
             print("--------------------------------------------------------------------------------------------------------------------------------------")

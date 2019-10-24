@@ -17,6 +17,7 @@ class Xinli001Spider(scrapy.Spider):  # 需要继承scrapy.Spider类
         for each in target:
             item = Xinli001SpiderItem()
             item['desc']=each.xpath(".//p[@class='desc']/text()").extract_first()
+            item['title'] = each.xpath(".//a[@class='title']/text()").extract_first()
             item['cover']=each.xpath(".//img").attrib['src']
             item['source']=1
             item['link']="https:"+each.xpath(".//a[1]").attrib['href']

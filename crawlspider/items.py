@@ -13,6 +13,7 @@ class Xinli001SpiderItem(scrapy.Item):
     # name = scrapy.Field()
 
     cover = scrapy.Field()
+    title = scrapy.Field()
     desc = scrapy.Field()
     text = scrapy.Field()
     source = scrapy.Field()
